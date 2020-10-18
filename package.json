@@ -1,5 +1,5 @@
 {
-  "name": "release-with-changelog",
+  "name": "changelog-release-by-branch",
   "version": "1.0.0",
   "description": "Create a GitHub relase with changelog for every tag you push",
   "main": "distribution/index.js",
@@ -7,7 +7,7 @@
     "package": "ncc build index.js -o distribution",
     "test": "xo"
   },
-  "repository": "notlmn/release-with-changelog",
+  "repository": "MorsiC/changelog-release-by-branch",
   "keywords": [
     "github",
     "actions",
@@ -16,7 +16,7 @@
     "releases",
     "changelog"
   ],
-  "author": "Laxman Damera",
+  "author": "Morsi Chaari",
   "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.2.6",
