@@ -1,6 +1,6 @@
 # changelog-release-by-branch
 
-Forked rom https://github.com/notlmn/release-with-changelog
+Forked from https://github.com/notlmn/release-with-changelog
 
 <img src="./media/releases.png" align="right" width="400">
 
