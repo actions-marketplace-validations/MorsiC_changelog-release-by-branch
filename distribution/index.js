@@ -245,7 +245,8 @@ async function run() {
 
 		// Get all tags, sorted by recently created tags
 		let branch = core.getInput('tag') || 'HEAD';
-		const {stdout: t} = await execFile('git', ['tag', '-l', '--sort=-creatordate', '--merged', branch]);
+		let tagTemplate = core.getInput('tagTemplate') || '*';
+		const {stdout: t} = await execFile('git', ['tag', '-l', '--sort=-creatordate', tagTemplate,'--merged', branch]);
 		const tags = t.split('\n').filter(Boolean).map(tag => tag.trim());
 
 		if (tags.length === 0) {

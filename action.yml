@@ -8,6 +8,9 @@ inputs:
   tag:
     description: Specific tag to generate changelog against
     required: false
+  tagTemplate:
+    description: Tags template used to look for the previous tag
+    required: false
   token:
     description: Personal access token (PAT) used to create releases
     required: true

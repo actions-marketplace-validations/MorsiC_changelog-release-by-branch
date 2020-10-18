@@ -20,7 +20,7 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 50
-    - uses: morsic/changelog-release-by-branch@v4
+    - uses: morsic/changelog-release-by-branch@v4.1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -28,7 +28,7 @@ jobs:
 Or you can customize it further:
 
 ``` yml
-    - uses: morsic/changelog-release-by-branch@v4
+    - uses: morsic/changelog-release-by-branch@v4.1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         exclude: '^Meta'
@@ -89,6 +89,12 @@ Regex to exclude commits based on their title (don't include the initial and fin
 Default: _latest tag available_
 
 Specific tag to generate changelog against.
+
+### tagTemplate
+
+Default: *
+
+Specific tag template.
 
 ## Outputs
 
