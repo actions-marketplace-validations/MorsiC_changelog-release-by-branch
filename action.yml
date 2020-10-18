@@ -1,8 +1,8 @@
-name: 'Release with Changelog'
+name: 'Release with Changelog by Branch'
 icon: 'tag'
 branding:
   icon: 'tag'
-  color: 'purple'
+  color: 'blue'
 description: 'Create a GitHub relase with changelog for every tag you push'
 inputs:
   tag:
