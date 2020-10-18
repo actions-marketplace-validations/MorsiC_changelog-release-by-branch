@@ -20,7 +20,7 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 50
-    - uses: notlmn/release-with-changelog@v3
+    - uses: morsic/changelog-release-by-branch@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
 ```
@@ -28,7 +28,7 @@ jobs:
 Or you can customize it further:
 
 ``` yml
-    - uses: notlmn/release-with-changelog@v3
+    - uses: morsic/changelog-release-by-branch@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         exclude: '^Meta'
