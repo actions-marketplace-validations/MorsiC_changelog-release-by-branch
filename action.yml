@@ -15,7 +15,7 @@ inputs:
     description: Path filter used by git log
     required: false
   grouping:
-    description: Release notes generation : group the commits by title 
+    description: "Release notes generation : group the commits by title"
     required: false
   token:
     description: Personal access token (PAT) used to create releases
