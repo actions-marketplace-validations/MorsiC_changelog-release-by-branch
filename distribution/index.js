@@ -245,7 +245,10 @@ async function run() {
 
 		// Get all tags, sorted by recently created tags
 		let branch = core.getInput('tag') || 'HEAD';
-		let tagTemplate = core.getInput('tagTemplate') || '*';
+		let tagTemplate = core.getInput('tagTemplate') || '';
+		let pathFilter = core.getInput('pathFilter') || '';
+		let grouping = core.getInput('grouping') === 'true' || false;
+		
 		const {stdout: t} = await execFile('git', ['tag', '-l', '--sort=-creatordate', tagTemplate,'--merged', branch]);
 		const tags = t.split('\n').filter(Boolean).map(tag => tag.trim());
 
@@ -264,31 +267,50 @@ async function run() {
 		// Get range to generate diff
 		let range = tags[1] + '..' + pushedTag;
 		if (tags.length < 2) {
-			const {stdout: rootCommit} = await execFile('git', ['rev-list', '--max-parents=0', 'HEAD']);
+			const {stdout: rootCommit} = await execFile('git', ['rev-list', '--max-parents=0', branch]);
 			range = rootCommit.trim('') + '..' + pushedTag;
 		}
 
 		core.info('Computed range: ' + range);
 
 		// Get commits between computed range
-		let {stdout: commits} = await execFile('git', ['log', '--format=%H%s', range]);
+		let {stdout: commits} = await execFile('git', ['log', '--format=%H%s', range, '--', pathFilter]);
 		commits = commits.split('\n').filter(Boolean).map(line => ({
 			hash: line.slice(0, 8),
-			title: line.slice(40)
+			title: line.slice(40).trim()
 		}));
-
+		
 		if (exclude) {
 			const regex = new RegExp(exclude);
 			commits = commits.filter(({title}) => !regex.test(title));
 		}
 
+		if (grouping) {
+			commits.sort(function (a, b) {
+											headb = String(b.title.match(/^(\S+)(?:\s.*|$)/).slice(1));
+											heada = String(a.title.match(/^(\S+)(?:\s.*|$)/).slice(1));
+											return headb.localeCompare(heada);
+										}
+						);
+		}
+		
 		// Generate markdown content
 		const commitEntries = [];
 		if (commits.length === 0) {
 			commitEntries.push('_Maintenance release_');
 		} else {
+			var prevHead='';
 			for (const {hash, title} of commits) {
-				const line = commitTemplate
+				template = commitTemplate;
+				if (grouping) {
+					head = String(title.match(/^(\S+)(?:\s.*|$)/).slice(1));
+					if ( head == prevHead ) {
+						template = "-".concat(commitTemplate);
+					} 
+					prevHead = head;
+				}
+
+				const line = template
 					.replace('{hash}', hash)
 					.replace('{title}', title)
 					.replace('{url}', repoURL + '/commit/' + hash);
