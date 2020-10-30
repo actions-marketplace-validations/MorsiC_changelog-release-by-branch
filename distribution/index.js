@@ -274,7 +274,7 @@ async function run() {
 		core.info('Computed range: ' + range);
 
 		// Get commits between computed range
-		let {stdout: commits} = await execFile('git', ['log', '--format=%H%s', range, '--', pathFilter], shell: true);
+		let {stdout: commits} = await execFile('git', ['log', '--format=%H%s', range, '--', pathFilter], { shell: true });
 		commits = commits.split('\n').filter(Boolean).map(line => ({
 			hash: line.slice(0, 8),
 			title: line.slice(40).trim()
