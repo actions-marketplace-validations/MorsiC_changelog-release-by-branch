@@ -78,7 +78,7 @@ async function run() {
 				if (grouping) {
 					head = String(title.match(/^(\S+)(?:\s.*|$)/).slice(1));
 					if ( head == prevHead ) {
-						template = "-".concat(commitTemplate);
+						template = "    ".concat(commitTemplate);
 					} 
 					prevHead = head;
 				}
