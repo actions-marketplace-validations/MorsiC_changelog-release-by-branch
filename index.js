@@ -60,8 +60,8 @@ async function run() {
 
 		if (grouping) {
 			commits.sort(function (a, b) {
-											headb = String(b.title.match(/^(\S+)(?:\s.*|$)/).slice(1));
-											heada = String(a.title.match(/^(\S+)(?:\s.*|$)/).slice(1));
+											headb = String(b.title.match(^(?:REVERT "?)?(\S+)(?:\s.*|$)).slice(1));
+											heada = String(a.title.match(^(?:REVERT "?)?(\S+)(?:\s.*|$)).slice(1));
 											return headb.localeCompare(heada);
 										}
 						);
@@ -76,7 +76,7 @@ async function run() {
 			for (const {hash, title} of commits) {
 				template = commitTemplate;
 				if (grouping) {
-					head = String(title.match(/^(\S+)(?:\s.*|$)/).slice(1));
+					head = String(title.match(^(?:REVERT "?)?(\S+)(?:\s.*|$)).slice(1));
 					if ( head == prevHead ) {
 						template = "    ".concat(commitTemplate);
 					} 
