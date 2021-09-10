@@ -12,7 +12,9 @@ async function run() {
 		const releaseTemplate = core.getInput('template');
 		const commitTemplate = core.getInput('commit-template');
 		const exclude = core.getInput('exclude');
-
+		const isDraft = core.getInput('draft') === 'true';
+		const isPrerelease = core.getInput('prerelease') === 'true';
+		
 		// Fetch tags from remote
 		await execFile('git', ['fetch', 'origin', '+refs/tags/*:refs/tags/*']);
 
@@ -99,8 +101,8 @@ async function run() {
 			body: releaseTemplate
 				.replace('{commits}', commitEntries.join('\n'))
 				.replace('{range}', `[\`${range}\`](${repoURL}/compare/${range})`),
-			draft: false,
-			prerelease: false
+			draft: isDraft,
+			prerelease: isPrerelease
 		});
 
 		core.info('Created release `' + createReleaseResponse.data.id + '` for tag `' + pushedTag + '`');
