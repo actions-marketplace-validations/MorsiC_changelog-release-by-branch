@@ -77,17 +77,18 @@ async function run() {
 			var prevHead='';
 			for (const {hash, title} of commits) {
 				template = commitTemplate;
+				head = String(title.match(^(?:REVERT "?)?(\S+)(?:\s.*|$)).slice(1));
 				if (grouping) {
-					head = String(title.match(^(?:REVERT "?)?(\S+)(?:\s.*|$)).slice(1));
 					if ( head == prevHead ) {
 						template = "    ".concat(commitTemplate);
 					} 
 					prevHead = head;
-				}
+				} 
 
 				const line = template
 					.replace('{hash}', hash)
 					.replace('{title}', title)
+					.replace('{head}', head)
 					.replace('{url}', repoURL + '/commit/' + hash);
 				commitEntries.push(line);
 			}
