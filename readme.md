@@ -76,6 +76,7 @@ Markdown template for each commit entry in release notes. Available replacements
 - `{title}` A single line title of the commit.
 - `{hash}` Abbreviated commit hash, gets linkified automatically in release notes.
 - `{url}` Plain link to commit on GitHub.
+- `{head}` Plain link to the first word of the commit title.
 
 ### exclude
 

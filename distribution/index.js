@@ -239,6 +239,8 @@ async function run() {
 		const releaseTemplate = core.getInput('template');
 		const commitTemplate = core.getInput('commit-template');
 		const exclude = core.getInput('exclude');
+		const isDraft = core.getInput('draft') === 'true';
+		const isPrerelease = core.getInput('prerelease') === 'true';
 
 		// Fetch tags from remote
 		await execFile('git', ['fetch', 'origin', '+refs/tags/*:refs/tags/*']);
@@ -287,8 +289,8 @@ async function run() {
 
 		if (grouping) {
 			commits.sort(function (a, b) {
-											headb = String(b.title.match(/^(\S+)(?:\s.*|$)/).slice(1));
-											heada = String(a.title.match(/^(\S+)(?:\s.*|$)/).slice(1));
+											headb = String(b.title.match(^(?:REVERT "?)?(\S+)(?:\s.*|$)).slice(1));
+											heada = String(a.title.match(^(?:REVERT "?)?(\S+)(?:\s.*|$)).slice(1));
 											return headb.localeCompare(heada);
 										}
 						);
@@ -302,8 +304,8 @@ async function run() {
 			var prevHead='';
 			for (const {hash, title} of commits) {
 				template = commitTemplate;
+				head = String(title.match(^(?:REVERT "?)?(\S+)(?:\s.*|$)).slice(1));
 				if (grouping) {
-					head = String(title.match(/^(\S+)(?:\s.*|$)/).slice(1));
 					if ( head == prevHead ) {
 						template = "    ".concat(commitTemplate);
 					} 
@@ -313,6 +315,7 @@ async function run() {
 				const line = template
 					.replace('{hash}', hash)
 					.replace('{title}', title)
+					.replace('{head}', head)
 					.replace('{url}', repoURL + '/commit/' + hash);
 				commitEntries.push(line);
 			}
@@ -326,8 +329,8 @@ async function run() {
 			body: releaseTemplate
 				.replace('{commits}', commitEntries.join('\n'))
 				.replace('{range}', `[\`${range}\`](${repoURL}/compare/${range})`),
-			draft: false,
-			prerelease: false
+			draft: isDraft,
+			prerelease: isPrerelease
 		});
 
 		core.info('Created release `' + createReleaseResponse.data.id + '` for tag `' + pushedTag + '`');
