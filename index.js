@@ -32,7 +32,19 @@ async function run() {
 			return;
 		}
 
-		let pushedTag = core.getInput('tag') || tags[0];
+		let pushedTag = tags[0];
+		let fromTag = tags[0];
+		if (core.getInput('tag')) {
+			pushedTag = core.getInput('tag')
+			fromTag = tags[0];
+		} else {
+			if (tags.length < 2) {
+				const {stdout: rootCommit} = await execFile('git', ['rev-list', '--max-parents=0', branch]);
+				fromTag = rootCommit.trim('');
+			} else {
+				fromTag = tags[1];
+			}
+		}
 
 		if (process.env.GITHUB_REF.startsWith('refs/tags/')) {
 			pushedTag = process.env.GITHUB_REF.replace('refs/tags/', '');
@@ -40,11 +52,7 @@ async function run() {
 		}
 
 		// Get range to generate diff
-		let range = tags[1] + '..' + pushedTag;
-		if (tags.length < 2) {
-			const {stdout: rootCommit} = await execFile('git', ['rev-list', '--max-parents=0', branch]);
-			range = rootCommit.trim('') + '..' + pushedTag;
-		}
+		let range = fromTag + '..' + pushedTag;
 
 		core.info('Computed range: ' + range);
 
